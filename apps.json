@@ -1,0 +1,36 @@
+{
+  "name": "Youtube - N",
+  "identifier": "com.nazyyaa.org",
+  "apiVersion": "v2",
+  "subtitle": "Wow. Its amazing.",
+  "description": "Youtube N version",
+  "iconURL": "https://raw.githubusercontent.com/nazyyaa/Youtube-Cat/main/assets/black_button.png",
+  "website": "https://github.com/nazyyaa/Youtube-Cat",
+  "apps": [
+    {
+      "name": "YouMod",
+      "bundleIdentifier": "com.google.ios.youtube",
+      "developerName": "Tonwalter888",
+      "subtitle": "YouTube with YouMod tweaks",
+      "localizedDescription": "Youtube with YouMod tweaks",
+      "iconURL": "https://raw.githubusercontent.com/nazyyaa/Youtube-Cat/main/assets/you_ico.png",
+      "tintColor": "FF0000",
+      "screenshots": [],
+      "versions": [
+        {
+          "version": "21.19.02",
+          "date": "2026-05-18",
+          "localizedDescription": "Version youtube: 21.19.02",
+          "downloadURL": "https://github.com/nazyyaa/Youtube-Cat/releases/download/untagged-1102376f2a479d6981f7/YTLitePlusEXTRA_21.18.4_v5.2.1_cracked.ipa",
+          "size": 124105527,
+          "minOSVersion": "14.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ],
+  "news": []
+}
