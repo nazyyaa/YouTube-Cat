@@ -1,4 +1,4 @@
-name: Build YTLitePlusEXTRA IPA with YTLite Cracked 
+name: Run Youtube-Build with Tweaks
 on:
   workflow_dispatch:
     inputs:
@@ -380,6 +380,12 @@ jobs:
           make_latest: true
 
       - name: Update apps.json
+        env:
+              TODAY: ${{ steps.date.outputs.today }}
+              YT_VER: ${{ env.YT_VERSION }}
+              BUILD_VER: ${{ env.BUILD_VERSION }}
+              REPO: https://github.com/${{ github.repository }}
+              SIZE: ${{ steps.size.outputs.size }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
           FILE="${{ steps.size.outputs.ipa_file }}"
@@ -424,13 +430,6 @@ jobs:
 
           print("apps.json updated")
           EOF
-
-            env:
-              TODAY: ${{ steps.date.outputs.today }}
-              YT_VER: ${{ env.YT_VERSION }}
-              BUILD_VER: ${{ env.BUILD_VERSION }}
-              REPO: https://github.com/${{ github.repository }}
-              SIZE: ${{ steps.size.outputs.size }}
 
       - name: Update README
         run: |
