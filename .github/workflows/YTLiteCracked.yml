@@ -390,47 +390,47 @@ jobs:
           REPO="https://github.com/${{ github.repository }}/releases/download/$BUILD_VER/$FILE"
 
           python3 << 'EOF'
-      import json, os
+          import json, os
 
-      yt_ver = os.environ["YT_VER"]
-      build = os.environ["BUILD_VER"]
-      today = os.environ["TODAY"]
-      download = os.environ["REPO"]
-      size = int(os.environ["SIZE"])
+          yt_ver = os.environ["YT_VER"]
+          build = os.environ["BUILD_VER"]
+          today = os.environ["TODAY"]
+          download = os.environ["REPO"]
+          size = int(os.environ["SIZE"])
 
-      try:
-          with open("apps.json") as f:
-              data = json.load(f)
-      except:
-          data = {"apps":[{"versions":[]}]} 
+          try:
+              with open("apps.json") as f:
+                  data = json.load(f)
+          except:
+              data = {"apps":[{"versions":[]}]} 
 
-      versions = data["apps"][0]["versions"]
+          versions = data["apps"][0]["versions"]
 
-      versions = [v for v in versions if v.get("version") != yt_ver]
+          versions = [v for v in versions if v.get("version") != yt_ver]
 
-      versions.insert(0, {
-          "version": yt_ver,
-          "date": today,
-          "localizedDescription": f"YouTube {yt_ver} + YTLitePlusEXTRA",
-          "downloadURL": download,
-          "size": size,
-          "minOSVersion": "14.0"
-      })
+          versions.insert(0, {
+              "version": yt_ver,
+              "date": today,
+              "localizedDescription": f"YouTube {yt_ver} + YTLitePlusEXTRA",
+              "downloadURL": download,
+              "size": size,
+              "minOSVersion": "14.0"
+          })
 
-      data["apps"][0]["versions"] = versions[:10]
+          data["apps"][0]["versions"] = versions[:10]
 
-      with open("apps.json", "w") as f:
-          json.dump(data, f, indent=2)
+          with open("apps.json", "w") as f:
+              json.dump(data, f, indent=2)
 
-      print("apps.json updated")
-      EOF
+          print("apps.json updated")
+          EOF
 
-        env:
-          TODAY: ${{ steps.date.outputs.today }}
-          YT_VER: ${{ env.YT_VERSION }}
-          BUILD_VER: ${{ env.BUILD_VERSION }}
-          REPO: https://github.com/${{ github.repository }}
-          SIZE: ${{ steps.size.outputs.size }}
+            env:
+              TODAY: ${{ steps.date.outputs.today }}
+              YT_VER: ${{ env.YT_VERSION }}
+              BUILD_VER: ${{ env.BUILD_VERSION }}
+              REPO: https://github.com/${{ github.repository }}
+              SIZE: ${{ steps.size.outputs.size }}
 
       - name: Update README
         run: |
