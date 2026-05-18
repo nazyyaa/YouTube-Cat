@@ -432,12 +432,20 @@ jobs:
           EOF
 
       - name: Update README
+        env:
+          YT_VERSION: ${{ env.YT_VERSION }}
         run: |
           TODAY=$(date -u +"%Y-%m-%d")
-          sed -i '' \
-            -e "s/YouTube version:.*/YouTube version: ${{ env.YT_VERSION }}/" \
-            -e "s/Last build:.*/Last build: $TODAY/" \
-            README.md
+          YT_VERSION="${YT_VERSION}"
+
+          if [ -f README.md ]; then
+            sed -i '' \
+              -e "s/YouTube version:.*/YouTube version: ${YT_VERSION}/" \
+              -e "s/Last build:.*/Last build: ${TODAY}/" \
+              README.md
+          else
+            echo "README.md not found, skipping"
+          fi
 
       - name: Commit changes
         run: |
