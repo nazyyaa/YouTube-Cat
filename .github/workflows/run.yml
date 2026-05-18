@@ -1,4 +1,4 @@
-name: Run Youtube-Build with Tweaks
+name: Build YTLitePlusEXTRA IPA with YTLite Cracked 
 on:
   workflow_dispatch:
     inputs:
@@ -71,10 +71,6 @@ jobs:
         run: |
           unzip -q youtube.ipa -d ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
-
-      - name: Set Build Version
-        run: |
-          echo "BUILD_VERSION=ytliteplusextra_${{ env.YT_VERSION }}" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
@@ -355,106 +351,13 @@ jobs:
           
           cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2.1_cracked.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
-      - name: Get IPA size
-        id: size
-        run: |
-          FILE=$(ls *.ipa | head -n 1)
-          SIZE=$(stat -f%z "$FILE")
-          echo "size=$SIZE" >> $GITHUB_OUTPUT
-          echo "ipa_file=$FILE" >> $GITHUB_OUTPUT
-
-      - name: Upload IPA to GitHub Release
+      - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ env.BUILD_VERSION }}
-          name: "YTLitePlusEXTRA ${{ env.YT_VERSION }}"
-          body: |
-            Auto-built IPA
-
-            YouTube version: ${{ env.YT_VERSION }}
-            Build version: ${{ env.BUILD_VERSION }}
-            Size: ${{ steps.size.outputs.size }} bytes
-            Run ID: ${{ github.run_id }}
-
-          files: ${{ steps.size.outputs.ipa_file }}
-          make_latest: true
-
-      - name: Update apps.json
-        env:
-              TODAY: ${{ steps.date.outputs.today }}
-              YT_VER: ${{ env.YT_VERSION }}
-              BUILD_VER: ${{ env.BUILD_VERSION }}
-              REPO: https://github.com/${{ github.repository }}
-              SIZE: ${{ steps.size.outputs.size }}
-        run: |
-          TODAY=$(date -u +%Y-%m-%d)
-          FILE="${{ steps.size.outputs.ipa_file }}"
-          SIZE="${{ steps.size.outputs.size }}"
-          YT_VER="${{ env.YT_VERSION }}"
-          BUILD_VER="${{ env.BUILD_VERSION }}"
-
-          REPO="https://github.com/${{ github.repository }}/releases/download/$BUILD_VER/$FILE"
-
-          python3 << 'EOF'
-          import json, os
-
-          yt_ver = os.environ["YT_VER"]
-          build = os.environ["BUILD_VER"]
-          today = os.environ["TODAY"]
-          download = os.environ["REPO"]
-          size = int(os.environ["SIZE"])
-
-          try:
-              with open("apps.json") as f:
-                  data = json.load(f)
-          except:
-              data = {"apps":[{"versions":[]}]} 
-
-          versions = data["apps"][0]["versions"]
-
-          versions = [v for v in versions if v.get("version") != yt_ver]
-
-          versions.insert(0, {
-              "version": yt_ver,
-              "date": today,
-              "localizedDescription": f"YouTube {yt_ver} + YTLitePlusEXTRA",
-              "downloadURL": download,
-              "size": size,
-              "minOSVersion": "14.0"
-          })
-
-          data["apps"][0]["versions"] = versions[:10]
-
-          with open("apps.json", "w") as f:
-              json.dump(data, f, indent=2)
-
-          print("apps.json updated")
-          EOF
-
-      - name: Update README
-        env:
-          YT_VERSION: ${{ env.YT_VERSION }}
-        run: |
-          TODAY=$(date -u +"%Y-%m-%d")
-          YT_VERSION="${YT_VERSION}"
-
-          if [ -f README.md ]; then
-            sed -i '' \
-              -e "s/YouTube version:.*/YouTube version: ${YT_VERSION}/" \
-              -e "s/Last build:.*/Last build: ${TODAY}/" \
-              README.md
-          else
-            echo "README.md not found, skipping"
-          fi
-
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add apps.json README.md || true
-          git commit -m "Auto update: ${{ env.YT_VERSION }}" || echo "No changes"
-          git push
+          tag_name: ytliteplusextra_ytlitecracked-ipa${{ github.run_number }}
+          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2.1_cracked 
+          files: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2.1_cracked.ipa
+          draft: true
 
       - name: Job Summary - Build Complete
         run: |
